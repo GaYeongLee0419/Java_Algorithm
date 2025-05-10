@@ -1,6 +1,8 @@
+package bfs.gayeong;
+
 import java.util.*;
 
-public class Solution {
+public class ShortestGameMap {
     private static int[] dx = {1, -1, 0, 0};
     private static int[] dy = {0, 0, 1, -1};
     private static int[][] visited;
