@@ -3,50 +3,46 @@ package gayeong;
 import java.util.*;
 
 public class TravelRoute {
-    private List<String> bestRoute = null;
+    private List<String[]> routes;
     private String[][] tickets;
     private boolean[] used;
 
     public String[] solution(String[][] tickets) {
         this.tickets = tickets;
-        this.used = new boolean[tickets.length];
+        this.used = new boolean[tickets.length + 1];
 
-        List<String> route = new ArrayList<>();
-        route.add("ICN");
+        routes = new ArrayList<>();
+
+        String[] route = new String[tickets.length];
+        route[0] = "ICN";
 
         dfs("ICN", route, 0);
 
-        return bestRoute.toArray(new String[0]);
+        routes.sort((a, b) -> {
+            for (int i = 0; i < a.length; i++) {
+                int temp = a[i].compareTo(b[i]);
+                if (temp != 0) return temp;
+            }
+            return 0;
+        });
+
+        return routes.get(0);
     }
 
-    private void dfs(String current, List<String> route, int depth) {
+    private void dfs(String current, String[] route, int depth) {
+        route[depth] = current;
         if (depth == tickets.length) {
-            if (bestRoute == null || compareRoutes(route, bestRoute) < 0) {
-                bestRoute = new ArrayList<>(route);
-            }
-
+            routes.add(Arrays.copyOf(route, route.length));
             return;
         }
 
         for (int i = 0; i < tickets.length; i++) {
-            if (!used[i] && tickets[i][0].equals(current)) {
+            if (!used[i] && current.equals(tickets[i][0])) {
                 used[i] = true;
-                route.add(tickets[i][1]);
-
                 dfs(tickets[i][1], route, depth + 1);
-
                 used[i] = false;
-                route.remove(route.size() - 1);
             }
         }
     }
 
-    private int compareRoutes(List<String> a, List<String> b) {
-        for (int i = 0; i < a.size(); i++) {
-            int result = a.get(i).compareTo(b.get(i));
-            if (result != 0) return result;
-        }
-
-        return 0;
-    }
 }
